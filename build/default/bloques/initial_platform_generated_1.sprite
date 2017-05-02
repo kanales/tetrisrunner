@@ -1,0 +1,4 @@
+tile_set: "/bloques/imagenes/bloque.atlas"
+default_animation: "map"
+material: "/builtins/materials/sprite.material"
+blend_mode: BLEND_MODE_ALPHA

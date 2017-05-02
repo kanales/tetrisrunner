@@ -1,0 +1,4 @@
+tile_set: "/nivel/level.atlas"
+default_animation: "volcano"
+material: "/builtins/materials/sprite.material"
+blend_mode: BLEND_MODE_ALPHA

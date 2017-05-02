@@ -1,0 +1,156 @@
+images {
+  image: "/bloques/imagenes/map.png"
+}
+animations {
+  id: "bloquePiramide_Fabrica"
+  images {
+    image: "/bloques/imagenes/bloque_fabrica_piramide.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloquePiramide"
+  images {
+    image: "/bloques/imagenes/bloque_piramide.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "anim_bloque_cubo_amarillo"
+  images {
+    image: "/bloques/imagenes/bloque_cubo.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueCubo_Fabrica"
+  images {
+    image: "/bloques/imagenes/bloque_fabrica_cubo.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueHorizontal_Fabrica"
+  images {
+    image: "/bloques/imagenes/bloque_fabrica_horizontal.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueHorizontal"
+  images {
+    image: "/bloques/imagenes/bloque_horizontal.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueHorizontalB"
+  images {
+    image: "/bloques/imagenes/bloque_horizontal2.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueJ_Fabrica"
+  images {
+    image: "/bloques/imagenes/bloque_fabrica_j.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueJ"
+  images {
+    image: "/bloques/imagenes/bloque_j.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueL"
+  images {
+    image: "/bloques/imagenes/bloque_l.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueL_Fabrica"
+  images {
+    image: "/bloques/imagenes/bloque_fabrica_L.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueT"
+  images {
+    image: "/bloques/imagenes/bloque_t.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueT_Fabrica"
+  images {
+    image: "/bloques/imagenes/bloque_fabrica_t.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueZ"
+  images {
+    image: "/bloques/imagenes/bloque_z.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bloqueS"
+  images {
+    image: "/bloques/imagenes/bloque_s2.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

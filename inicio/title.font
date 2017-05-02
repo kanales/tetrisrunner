@@ -1,0 +1,5 @@
+font: "/inicio/assets/Montserrat-ExtraBold.ttf"
+material: "/builtins/fonts/font.material"
+size: 84
+outline_alpha: 1.0
+outline_width: 4.0

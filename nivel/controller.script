@@ -1,0 +1,119 @@
+local fabricaBlockx = 950
+local fabricaBlocky = 170
+
+local preview_pos = vmath.vector3(920, 500, 0)
+local dropHeight = 650
+local epsilon = 0.0001
+
+local initial_blocks = { "/initial/bloque_horizontal", "/initial/bloque_horizontal1", "/initial/bloque_horizontal2", 
+						 "/initial/bloque_horizontal3", "/initial/bloque_horizontal4", "/initial/bloque_horizontal5" }
+
+
+function init(self)
+	self.score = 0
+    self.spawns = initial_blocks
+    self.bFabrica = {"#bloqueHorizontal","#bloqueJ","#bloqueL","#bloquePiramide","#bloqueT"}
+	self.frequency = 0.5
+	self.timer = 1/self.frequency
+	self.playing = true
+	self.stored_figure = preview_maker(self, self.bFabrica, x)
+	
+	local i = math.random(1,#self.bFabrica)
+	local f = self.bFabrica[i]
+	local bloque_position = vmath.vector3(570, 120, 1)
+	local b = factory.create(f, bloque_position, nil, {},1)
+	msg.post(b, "init",{id,name=string.sub(f, 2).."_Fabrica"})
+	table.insert(self.spawns, b)
+end
+
+function drop_handler(fabricas, x, self)
+	if(self.playing)then
+		msg.post(self.next_figure, "drop")
+		table.insert(self.spawns, self.next_figure)
+		self.next_figure = nil
+		self.stored_figure = preview_maker(self, fabricas, x)
+	end
+end
+
+function preview_maker(self, fabricas, x)
+	if self.playing then
+		local i = math.random(1,#fabricas)
+		local f = fabricas[i]
+		local b = factory.create(f, preview_pos)
+		msg.post(b, "init", {id = 0, name = string.sub(f, 2)})
+		msg.post(b, "preview")
+		return b
+	end
+end
+
+function preview_figure(self, x)
+	msg.post(self.next_figure, "set_pos", {x = x, y = dropHeight})
+end
+
+function update(self, dt)
+	--timer 
+	self.timer = self.timer - dt
+	if  self.timer <= 0 and self.playing then
+		self.timer = 1/self.frequency
+		local i = math.random(1,#self.bFabrica)
+		local id = math.random(0, 1)
+		--id == 1 = fabrica
+		if( id == 1) then
+			local f = self.bFabrica[i]
+			local bloque_position = vmath.vector3(fabricaBlockx, fabricaBlocky, 1)
+			local b = factory.create(f, bloque_position, nil, {},1)
+			msg.post(b, "init",{id,name=string.sub(f, 2).."_Fabrica"})
+			table.insert(self.spawns, b)
+		--else
+			--local f = self.bFabrica[i]
+			--local bloque_position = vmath.vector3(blockx, blocky, 1)
+			--local b = factory.create(f, bloque_position, nil, {}, 1)
+			--msg.post(b, "init",{id,name=string.sub(self.bFabrica[i],2)})
+			--table.insert(self.spawns, b)
+		end
+		
+	end
+	
+	if self.playing then
+		self.score = self.score + dt
+		local score_floor = math.floor(self.score)
+		if ((self.score - score_floor) < epsilon) then
+			msg.post("/nivel", "set_score", {score = score_floor})
+		end
+	end
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("pause") then
+		self.playing = false
+		for i, p in ipairs(self.spawns) do
+			msg.post(p,"pause")
+		end
+		msg.post("/background/controller", "pause")
+		msg.post("/hero", "pause")
+	elseif message_id == hash("play") then
+		self.playing = true
+		for i, p in ipairs(self.spawns) do
+			msg.post(p,"play")
+		end
+		msg.post("/background/controller","play")
+		msg.post("/nivel#gui", "acquire_input_focus")
+		msg.post("/hero", "play")
+ 	elseif message_id == hash("drop") then
+ 		drop_handler(self.bFabrica, message.x, self)
+ 	elseif message_id == hash("preview") then
+ 		if not self.next_figure then
+ 			self.next_figure = self.stored_figure
+ 			self.stored_figure = nil
+ 		end
+ 		if self.playing then preview_figure(self, message.x) end
+ 	elseif message_id == hash("delete_spawn")then
+		for i, p in ipairs(self.spawns) do
+			if p == message.id then
+				table.remove(self.spawns, i)
+				go.delete(p)
+			end
+		end
+ 	end
+end

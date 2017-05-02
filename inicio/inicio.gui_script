@@ -1,0 +1,60 @@
+local click_hash = hash("click")
+local load_proxy_hash = hash("load_proxy")
+local proxy_loaded_hash = hash("proxy_loaded")
+
+-- FUNCIONES DE AYUDA
+local function button_release(button)
+	-- nota "button" es el NOMBRE del boton
+	gui.set_enabled(gui.get_node(button .. "/pressed"), false)
+	gui.set_enabled(gui.get_node(button .. "/released"), true)
+end
+
+local function button_press(button)
+	gui.set_enabled(gui.get_node(button .. "/pressed"), true)
+	gui.set_enabled(gui.get_node(button .. "/released"), false)
+end
+
+local function switch_to_level()
+	msg.post("/loader#proxy-level", "load")
+end
+
+local function click_handle(button, action)
+	local b_id = button .. "/released"
+	local b    = gui.get_node(b_id) -- t
+	if action.pressed then
+		if gui.is_enabled(b) and gui.pick_node(b,action.x, action.y) then
+			button_press(button)
+		end
+	elseif action.released then
+		button_release(button)
+		msg.post("sound#sound", "stop_sound")
+		switch_to_level()
+	end
+end
+-----
+
+function init(self)
+	-- BOTONES
+	self.button = "inicio_but"
+	button_release(self.button)
+	msg.post("sound#sound", "play_sound")
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_input(self, action_id, action)
+	if action_id == click_hash then
+		click_handle(self.button, action)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == load_proxy_hash then
+		msg.post(message.proxy, "load")
+	elseif message_id == proxy_loaded_hash then
+		msg.post(sender, "init")
+		msg.post(sender, "enable")
+		msg.post(".", "release_input_focus")
+		-- desactivamos el menu principal
+		msg.post(self.selfurl, "disable")
+	end
+end

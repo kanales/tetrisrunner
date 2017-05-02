@@ -1,0 +1,130 @@
+-- CONSTANTS
+local jump_hash = hash("jump")
+local run_anim = hash("run")
+local climb_anim = hash("climb")
+local gravity = -20 --gravedad interna del personaje
+--local velocity = 10 --velocidad del personaje
+local jumpHeigth = 500 -- altura de salto del personaje
+
+-- VARIABLES
+local currentAnimation = run_anim
+local ground_contact = false -- si hay contacto con el suelo esta variable se pone a true
+
+---- Funciones internas del object
+
+--funcion que hace el personaje saltar
+local function jump(self)
+	if self.ground_contact then
+		-- hace el sonido de salto
+		msg.post("#jumpSound", "play_sound")
+		self.velocity.y = jumpHeigth
+	end
+end
+
+-- funcion para cambiar de animacion dinamicamente
+local function play_animation(self, anim)
+    -- solo hace la animacion si es distiinta a la actual
+    if self.currentAnimation ~= anim then
+        -- cambia la animacion del sprite
+        msg.post("#sprite", "play_animation", {id = anim})
+        self.currentAnimation = anim	
+    end
+end
+
+local function abort_jump(self)
+	if self.velocity.y > 0 then
+		self.velocity.y = self.velocity.y * 0.5
+	end
+end
+
+local function handle_geometry_contact(self, normal, distance)
+	local proj = vmath.dot(self.correction, normal)
+	local comp = (distance - proj) * normal
+
+	self.correction = self.correction + comp
+	if normal.y > 0.7 then
+		self.ground_contact = true
+	end
+	self.correction = self.correction + comp
+	go.set_position(go.get_position()+comp)
+	proj = vmath.dot(self.velocity, normal)
+	if proj < 0 then
+		self.velocity = self.velocity - proj * normal
+	end
+end
+
+--funcion que hace el personaje escalar
+local function climb(self)
+	play_animation(self, climb_anim)
+end
+
+local function update_animation(self)
+    -- make sure the right animation is playing
+    if self.ground_contact then
+        play_animation(self, hash("run"))
+    else
+        if self.velocity.y > 0 then
+            play_animation(self, hash("jump"))
+       	end
+   end
+end
+
+---- Funciones de defold
+
+function init(self)
+	self.playing = true
+	-- pone el input focus en el personaje
+    msg.post(".", "acquire_input_focus")
+    self.velocity = vmath.vector3(0, -gravity, 0)
+end
+
+function update(self, dt)
+	if(self.playing)then
+		local gravity_vector = vmath.vector3(0, gravity, 0)
+		-- si no hay contacto con el suelo el personaj ese cae
+		if not self.ground_contact then
+			self.velocity = self.velocity + gravity_vector
+			--go.set_position(go.get_position() + self.velocity * dt)
+		end
+		--self.velocity = vmath.vector3(0, -gravity, 0)
+		go.set_position(go.get_position() + self.velocity*dt)
+	    -- reset volatile state
+	    self.correction = vmath.vector3()
+		update_animation(self)
+		self.ground_contact = false
+	else
+        play_animation(self, hash("stop"))
+	end
+end
+
+function final(self)
+	msg.post("/controller", "pause_game")
+	msg.post("/menu_pausa#gui", "show")
+	msg.post("/menu_pausa#gui", "game_over")
+	msg.post("/controller", "pause");
+end
+
+function on_message(self, message_id, message, sender)
+    -- TODO: GESTION DE COLISIONES
+    if message_id == hash("pause") then
+		self.playing = false
+	elseif message_id == hash("play") then
+		self.playing = true
+	elseif message_id == hash("collision_response") then
+		if message.group == hash("destructor") then
+			go.delete(go.get_id())
+		
+	--		msg.post("/menu_pausa#menu_pausa.gui_script", "delete_hero", { id = go.get_id() })
+		end	
+	elseif message_id == hash("contact_point_response") then
+		if message.group == hash("bloque") then
+			handle_geometry_contact(self, message.normal, message.distance)
+		end
+	end
+    
+    if message_id == hash("true") then 
+		jump(self)
+	elseif message_id == hash("false") then
+		abort_jump(self)
+	end
+end

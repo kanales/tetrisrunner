@@ -1,0 +1,80 @@
+local jump_but_hash = hash("jump_but")
+local pause_but_hash = hash("pause_but")
+local hide_hash = hash("hide")
+local show_hash = hash("show")
+local set_score_hash = hash("set_score")
+local game_over_hash = hash("game_over")
+
+local click_hash = hash("click")
+
+-- FUNCIONES DE AYUDA
+local function jump_but_handler(action)
+	if action.pressed then
+		msg.post("/hero", hash("true")) 
+	elseif action.released then
+		msg.post("/hero", hash("false"))
+	end
+end
+
+local function pause_but_handler(action)
+	if action.pressed then
+		-- TODO: pausar juegos
+		msg.post("/controller", "pause_game")
+		msg.post("/menu_pausa#gui", "show")
+		msg.post(".", "release_input_focus")
+		msg.post("/controller", "pause");
+	end
+end
+function setSpeed (newSpeed)
+	self.speed = newSpeed
+end
+
+local function select_button(buttons, action)
+	for _,b in pairs(buttons) do
+		local but = gui.get_node(b)
+		if gui.pick_node(but, action.x, action.y) then
+			return hash(b)
+		end
+	end
+end
+
+local function scale_down(self, node)
+	local s = 1.0
+	gui.animate(node, gui.PROP_SCALE, vmath.vector4(s, s, s, 0), gui.EASING_OUT, 0.05)
+end
+
+
+-------
+
+function on_input(self, action_id, action)
+    if action_id == click_hash then
+    	local b = select_button(self.buttons, action)
+    	if b == jump_but_hash then
+    		jump_but_handler(action)
+    	elseif b == pause_but_hash then
+    		pause_but_handler(action)
+    	elseif action.released and action.x then
+    		msg.post("/controller", "drop", {x = action.x})
+    	elseif action.x and action.repeated or action.pressed then
+    		msg.post("/controller", "preview", {x = action.x})
+    	end
+    end
+end
+
+function on_message(self, message_id, message)
+	if message_id == set_score_hash then
+		local s = 1.05
+		local scoreboard = gui.get_node("scoreboard")
+		gui.set_text(scoreboard, "Score: " .. message.score)
+		gui.animate(scoreboard, gui.PROP_SCALE, vmath.vector4(s, s, s, 0), gui.EASING_OUT, 0.1, 0.0, scale_down)
+	end
+end
+
+function init(self)
+	local scoreboard = gui.get_node("scoreboard")
+	gui.set_text(scoreboard, "Score: " .. 0)
+	self.buttons = { "pause_but", "jump_but" }
+	msg.post("/menu_pausa#gui", "hide")
+	msg.post("music#sound", "play_sound")
+	msg.post(".", "acquire_input_focus")
+end

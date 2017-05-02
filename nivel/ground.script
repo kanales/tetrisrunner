@@ -1,0 +1,48 @@
+local bgPieces = {"background1","background2"}
+local volcanoPieces = {"volcano0", "volcano1", "volcano2", "volcano3", "volcano4", "volcano5",
+						 "volcano6", "volcano7", "volcano8", "volcano9","volcano10", "volcano11",
+						 "volcano12", "volcano13", "volcano14", "volcano15", "volcano16", "volcano17", 
+						 "volcano18", "volcano19", "volcano20", "volcano21" }
+local widthScreen = 1080
+local heightScreen = 720
+local initial_speed = 1
+
+--local rotate
+--rotate = function(self)
+		--go.animate(".","rotation",go.PLAYBACK_ONCE_BACKWARD,
+function init(self)
+	self.speed = initial_speed
+end
+
+function update(self, dt)
+    -- Add update code here
+    -- Remove this function if not needed
+	for i, p in ipairs(bgPieces) do
+		local pos = go.get_position(p)
+		if pos.x <= -widthScreen then
+			pos.x = widthScreen*2 + (pos.x)
+		end
+		pos.x = pos.x - self.speed
+		go.set_position(pos, p)
+	end
+	
+	for i, p in ipairs(volcanoPieces) do
+		local pos = go.get_position(p)
+		if pos.x <= -widthScreen then
+			pos.x = widthScreen*2 + (pos.x)
+		end
+		pos.x = pos.x - (self.speed*2)
+		go.set_position(pos, p)
+	end
+end 
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("pause") then
+		self.speed = 0
+		
+	elseif message_id == hash("play") then
+		self.speed = initial_speed
+		
+	end
+end

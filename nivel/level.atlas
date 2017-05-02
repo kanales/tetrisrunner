@@ -1,0 +1,33 @@
+images {
+  image: "/nivel/assets/images/background.png"
+}
+images {
+  image: "/nivel/assets/images/gui/button_pause_w.png"
+}
+images {
+  image: "/nivel/assets/images/gui/button_up_w.png"
+}
+images {
+  image: "/nivel/assets/images/gui/pause.png"
+}
+images {
+  image: "/nivel/assets/images/gui/red_boxCross.png"
+}
+images {
+  image: "/nivel/assets/images/gui/red_button_pressed.png"
+}
+images {
+  image: "/nivel/assets/images/gui/red_button_released.png"
+}
+images {
+  image: "/nivel/assets/images/volcano.png"
+}
+images {
+  image: "/nivel/assets/saw.png"
+}
+images {
+  image: "/nivel/assets/images/gui/grey_button07.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

@@ -1,0 +1,12 @@
+images {
+  image: "/inicio/assets/grey_button_pressed.png"
+}
+images {
+  image: "/inicio/assets/grey_button_released.png"
+}
+images {
+  image: "/inicio/assets/backgroundMenu.jpg"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

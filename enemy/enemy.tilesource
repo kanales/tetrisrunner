@@ -1,0 +1,49 @@
+image: "/enemy/image/qubodupGlowArmorSideSprite.png"
+tile_width: 100
+tile_height: 110
+tile_margin: 0
+tile_spacing: 0
+collision: "/enemy/image/qubodupGlowArmorSideSprite.png"
+material_tag: "tile"
+convex_hulls {
+  index: 0
+  count: 8
+  collision_group: ""
+}
+convex_hulls {
+  index: 8
+  count: 7
+  collision_group: ""
+}
+convex_hulls {
+  index: 15
+  count: 7
+  collision_group: ""
+}
+convex_hulls {
+  index: 22
+  count: 8
+  collision_group: ""
+}
+convex_hulls {
+  index: 30
+  count: 7
+  collision_group: ""
+}
+convex_hulls {
+  index: 37
+  count: 9
+  collision_group: ""
+}
+collision_groups: "default"
+animations {
+  id: "enemyWalk"
+  start_tile: 4
+  end_tile: 6
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+extrude_borders: 0
+inner_padding: 0

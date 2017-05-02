@@ -1,0 +1,57 @@
+local initial_speed = 75
+local init_hash = hash("init")
+local drop_hash = hash("drop")
+local drop_speed = 900
+local dropHeight = 600
+
+function init(self)
+	self.velocity = vmath.vector3(initial_speed, 0, 0)
+	self.isDropped = false
+end
+
+
+function final(self)
+    -- Add finalization code here
+    -- Remove this function if not needed
+end
+
+function update(self, dt)
+	go.set_position(go.get_position() - self.velocity * dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		if message.group == hash("destructor") then
+			msg.post("/controller", "delete_spawn", { id = go.get_id() })	
+		elseif self.isDropped and message.group == hash("bloque") then
+			self.isDropped = false
+			self.velocity.y = 0
+		elseif self.isDropped and message.group == hash("default") then
+			print("hero", "true")
+		end
+	end
+	
+	if message_id == init_hash then
+		-- update de la velocidad vertical
+		--msg.post("#sprite","play_animation", {id = hash(message.anim)})
+		msg.post("#sprite","play_animation", {id = hash(message.name)})
+	elseif message_id == drop_hash then
+		self.isDropped = true
+		self.velocity = vmath.vector3(initial_speed, drop_speed, 0)
+	elseif message_id == hash("pause") then
+		self.velocity = vmath.vector3(0,0,0)
+	elseif message_id == hash("play") then
+		self.velocity.x = initial_speed
+		self.velocity.y = 0
+		if(self.isDropped)then
+			self.velocity.y = drop_speed
+		end
+	elseif message_id == hash("preview") then
+		self.velocity = vmath.vector3(0,0,0)
+	elseif message_id == hash("set_pos") then
+		local pos = go.get_position()
+		pos.x = message.x
+		pos.y = message.y
+		go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, pos, go.EASING_LINEAR, 0.08)
+	end
+end
